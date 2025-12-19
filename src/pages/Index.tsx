@@ -15,8 +15,25 @@ const Index = () => {
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('section-visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
 
   const projects: Project[] = [
@@ -89,7 +106,13 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center px-6 md:px-12 relative">
+      <section 
+        className="min-h-screen flex items-center justify-center px-6 md:px-12 relative transition-opacity duration-700"
+        style={{
+          transform: `translateY(${scrollY * 0.3}px)`,
+          opacity: 1 - scrollY / 800
+        }}
+      >
         <div className="max-w-7xl w-full">
           <div className="space-y-4 md:space-y-6">
             <h1 
@@ -137,7 +160,13 @@ const Index = () => {
       </section>
 
       {/* Featured Work Section */}
-      <section id="work" className="py-20 md:py-32 px-6 md:px-12">
+      <section 
+        id="work" 
+        className="py-20 md:py-32 px-6 md:px-12 opacity-0 transition-all duration-1000 ease-out translate-y-20"
+        style={{
+          transform: `translateY(${Math.max(0, (scrollY - 400) * -0.05)}px)`
+        }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 md:mb-20">
             <h2 
@@ -187,7 +216,10 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 md:py-32 px-6 md:px-12 bg-[#0F0F0F]">
+      <section 
+        id="about" 
+        className="py-20 md:py-32 px-6 md:px-12 bg-[#0F0F0F] opacity-0 transition-all duration-1000 ease-out translate-y-20"
+      >
         <div className="max-w-5xl mx-auto">
           <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-8 md:mb-12"
@@ -243,7 +275,10 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 md:py-32 px-6 md:px-12">
+      <section 
+        id="contact" 
+        className="py-20 md:py-32 px-6 md:px-12 opacity-0 transition-all duration-1000 ease-out translate-y-20"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <h2 

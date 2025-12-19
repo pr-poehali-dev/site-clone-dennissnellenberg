@@ -205,3 +205,12 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--secondary));
 }
+
+section {
+  will-change: transform, opacity;
+}
+
+section.section-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
